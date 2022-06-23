@@ -23,37 +23,55 @@ def is_cell_empty(snake, cell):
         return True
 
 
-def snake_next_cell(snake, board):
+def head_next_cell(snake, board):
     """Look for the posibles neigboor cells that the snake can go.
     In order to calculate it, we take in account that the snake can
     only move verticaly ([1,0] and [-1,0]) and horizontaly ([0,1],[0,-1]) from head"""
     head = snake[0]
 
-    possible_next_cell = [0, 1], [1, 0], [0, -1], [-1, 0]
+    possible_next_cell = [[0, 1], [1, 0], [0, -1], [-1, 0]]
 
-    dimention_list = []
+    head_next_cell = []
 
     for i, j in possible_next_cell:
         n = head[0] + i
         m = head[1] + j
 
-        if n >= board[0]:
+        if n >= board[0] or n < 0: #if the cell is out of the board, skip the cell
             continue
 
-        if m >= board[1]:
+        if m >= board[1] or n < 0:
             continue
 
         if is_cell_empty(snake, [n, m]):
-            dimention_list.append([n, m])
+            head_next_cell.append([[n, m]] + snake[0:-1])
 
-    return dimention_list
+    return head_next_cell
 
 
 def numberOfAvailableDifferentPaths(board, snake, depth):
-    board_array = initialize_board(board)
-    board_array = board_with_snake_coordinates(snake, board_array)
-    solution = snake_next_cell(snake, board)
-    return solution
+
+    #Helper function only to visualize the result. Not necesary for the solution
+    #board_array = initialize_board(board)
+    #board_array = board_with_snake_coordinates(snake, board_array)
+
+    pos_head_cell = head_next_cell(snake, board)
+
+    if depth == 1:
+        return len(pos_head_cell)
+
+    higher_dimentions = []
+    for i in range(depth-1):
+
+        if (len(higher_dimentions) > 1):
+            pos_head_cell = higher_dimentions
+            higher_dimentions = []
+
+        for item in pos_head_cell:
+            higher_dimentions.extend(head_next_cell(item, board))
+
+    print(len(higher_dimentions))
+    return higher_dimentions
 
 
 if __name__ == '__main__':
