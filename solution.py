@@ -1,8 +1,3 @@
-board = [4, 3]
-snake = [[2, 2], [3, 2], [3, 1], [3, 0], [2, 0], [1, 0], [0, 0], [0, 1]]
-depth = 3
-
-
 def initialize_board(board):
     """helper function to inicialize the array with zeros using the board dimentions"""
     return [[0] * board[1] for i in range(board[0])]  # multiply the quantity of column by the quantity of rows
@@ -40,7 +35,7 @@ def head_next_cell(snake, board):
         if n >= board[0] or n < 0: #if the cell is out of the board, skip the cell
             continue
 
-        if m >= board[1] or n < 0:
+        if m >= board[1] or m < 0:
             continue
 
         if is_cell_empty(snake, [n, m]):
@@ -68,17 +63,18 @@ def numberOfAvailableDifferentPaths(board, snake, depth):
             higher_dimentions = []
 
         for item in pos_head_cell:
-            higher_dimentions.extend(head_next_cell(item, board))
+            result = head_next_cell(item, board)
+            for i in result:
+                if i not in higher_dimentions:
+                    higher_dimentions.extend([i])
 
-    print(len(higher_dimentions))
-    return higher_dimentions
-
+    return len(higher_dimentions)
 
 if __name__ == '__main__':
-
-   numberOfAvailableDifferentPaths(board, snake, depth)
-
-
+    board = [2, 3]
+    snake = [[0, 2], [0, 1], [0, 0], [1, 0], [1, 1], [1, 2]]
+    depth = 10
+    numberOfAvailableDifferentPaths(board, snake, depth)
 
 
 
